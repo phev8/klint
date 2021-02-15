@@ -6,6 +6,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `yarn run electron:dev`
+
+Runs the app with the electron wrapper.
+It will reload if you make edits.
+
+### `yarn run electron:build`
+
+Builds the electron app for production and places the executable in the dist folder.
+File size not yet optimized.
+
 ### `yarn start`
 
 Runs the app in the development mode.\
