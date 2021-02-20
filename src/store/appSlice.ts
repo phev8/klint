@@ -13,7 +13,8 @@ const appSlice = createSlice({
   initialState: initialState,
   reducers: {
     reset: (state) => {
-      state = initialState;
+      state = { ...initialState };
+      return state;
     },
     setVersion: (state, action: PayloadAction<string>) => {
       state.version = action.payload;

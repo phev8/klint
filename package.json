@@ -12,7 +12,7 @@
       "build/**/*"
     ],
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "public"
     }
   },
   "dependencies": {
