@@ -11,7 +11,7 @@ void main() async {
 }
 
 Future initialize() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Config.initialize();
   // await Storage.initialize();
 }
