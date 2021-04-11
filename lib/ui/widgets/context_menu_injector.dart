@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:klint/state/ui/context_menu_state.dart';
 import 'package:provider/provider.dart';
 
-class ContextMenuInjector extends StatefulWidget {
+class ContextMenuInjector extends StatelessWidget {
   final Widget child;
 
   const ContextMenuInjector({Key key, this.child}) : super(key: key);
 
-  @override
-  _ContextMenuInjectorState createState() => _ContextMenuInjectorState();
-}
-
-class _ContextMenuInjectorState extends State<ContextMenuInjector> {
   Widget _contextMenus() {
     return Consumer<ContextMenuState>(builder: (_, contextMenus, __) {
       return Stack(
@@ -26,7 +21,7 @@ class _ContextMenuInjectorState extends State<ContextMenuInjector> {
       create: (_) => ContextMenuState(),
       child: Stack(
         children: <Widget>[
-          widget.child,
+          child,
           _contextMenus(),
         ],
       ),
