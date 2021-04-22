@@ -12,9 +12,9 @@ class Api {
   static Future callWithoutParameter(
     BuildContext context,
     ApiFunctionWithoutParameter apiFunction, {
-    Function(Response) onSuccess,
-    Function(Response) onServerError,
-    Function(dynamic) onException,
+    Function(Response)? onSuccess,
+    Function(Response?)? onServerError,
+    Function(Object)? onException,
   }) async {
     return _call<dynamic>(
       context,
@@ -29,9 +29,9 @@ class Api {
     BuildContext context,
     ApiFunctionWithParameter<T> apiFunction,
     T message, {
-    Function(Response) onSuccess,
-    Function(Response) onServerError,
-    Function(dynamic) onException,
+    Function(Response)? onSuccess,
+    Function(Response?)? onServerError,
+    Function(Object)? onException,
   }) async {
     return _call<T>(
       context,
@@ -45,12 +45,12 @@ class Api {
 
   static Future _call<T>(
     BuildContext context, {
-    ApiFunctionWithoutParameter apiFunctionWithoutParameter,
-    ApiFunctionWithParameter<T> apiFunctionWithParameter,
-    T message,
-    Function(Response) onSuccess,
-    Function(Response) onServerError,
-    Function(dynamic) onException,
+    ApiFunctionWithoutParameter? apiFunctionWithoutParameter,
+    ApiFunctionWithParameter<T>? apiFunctionWithParameter,
+    T? message,
+    Function(Response)? onSuccess,
+    Function(Response?)? onServerError,
+    Function(Object)? onException,
   }) async {
     try {
       Response response;
@@ -79,14 +79,16 @@ class Api {
     }
   }
 
-  static onResponseError(BuildContext context, Response response, Function(Response) onServerError) {
-    var errorMessage = "${response.statusCode}: ${response.statusMessage}\n${response.data}";
+  static onResponseError(BuildContext context, Response? response, Function(Response?)? onServerError) {
+    var errorMessage = (response == null)
+        ? "Unknown response error (Response = null)"
+        : "${response.statusCode}: ${response.statusMessage}\n${response.data}";
     print(errorMessage);
     ErrorDialog.display(context, errorMessage);
     if (onServerError != null) onServerError(response);
   }
 
-  static onExceptionError(BuildContext context, Exception e, Function(dynamic) onException) {
+  static onExceptionError(BuildContext context, Object e, Function(Object)? onException) {
     print(e.toString());
     ErrorDialog.display(context, e.toString());
     if (onException != null) onException(e);

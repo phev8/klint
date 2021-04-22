@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class ContextMenuInjector extends StatelessWidget {
   final Widget child;
 
-  const ContextMenuInjector({Key key, this.child}) : super(key: key);
+  const ContextMenuInjector({Key? key, required this.child}) : super(key: key);
 
   Widget _contextMenus() {
     return Consumer<ContextMenuState>(builder: (_, contextMenus, __) {

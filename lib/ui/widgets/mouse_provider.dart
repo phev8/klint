@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class MouseProvider extends StatelessWidget {
   final Widget child;
 
-  const MouseProvider({Key key, this.child}) : super(key: key);
+  const MouseProvider({Key? key, required this.child}) : super(key: key);
 
   void onHover(BuildContext context, PointerHoverEvent event) {
     Provider.of<MouseState>(context, listen: false).position = event.position;

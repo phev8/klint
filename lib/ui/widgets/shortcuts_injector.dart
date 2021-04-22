@@ -5,7 +5,7 @@ class ShortcutsInjector extends StatelessWidget {
   final ShortcutsDefinition shortcutsDefinition;
   final Widget child;
 
-  const ShortcutsInjector({Key key, this.child, @required this.shortcutsDefinition}) : super(key: key);
+  const ShortcutsInjector({Key? key, required this.child, required this.shortcutsDefinition}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

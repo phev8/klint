@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TapableOverlay extends StatelessWidget {
-  final Function onTap;
+  final Function()? onTap;
 
-  const TapableOverlay({Key key, this.onTap}) : super(key: key);
+  const TapableOverlay({Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
