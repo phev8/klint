@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:klint/api/api.dart';
@@ -40,8 +38,10 @@ class AnnotationShortcuts extends ShortcutsDefinition {
                   ),
                 ),
               );
+
               // await Api.call(getContext(), () => ProjectsApi.deleteProject("0"));
-              Api.call(getContext(), () => ProjectsApi.getAllProjects(), onSuccess: (response) {
+
+              Api.call(getContext(), ProjectsApi.getAllProjects, onSuccess: (response) {
                 response.data.forEach((element) {
                   print(ProjectContainer.fromJson(element).toJson());
                 });
