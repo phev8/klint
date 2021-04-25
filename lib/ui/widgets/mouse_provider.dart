@@ -9,7 +9,7 @@ class MouseProvider extends StatelessWidget {
   const MouseProvider({Key? key, required this.child}) : super(key: key);
 
   void onHover(BuildContext context, PointerHoverEvent event) {
-    Provider.of<MouseState>(context, listen: false).position = event.position;
+    Provider.of<MouseState>(context, listen: false).position = event.localPosition;
   }
 
   @override
