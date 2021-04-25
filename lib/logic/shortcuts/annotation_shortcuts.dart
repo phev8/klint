@@ -20,7 +20,7 @@ class AnnotationShortcuts extends ShortcutsDefinition {
           },
           <Type, Action<Intent>>{
             _TagIntent: CallbackAction<_TagIntent>(onInvoke: (_TagIntent intent) {
-              Provider.of<ContextMenuState>(getContext(), listen: false).openDebugMenu(getContext());
+              getContext().read<ContextMenuState>().openDebugMenu(getContext());
               return;
             }),
             _DebugIntent: CallbackAction<_DebugIntent>(onInvoke: (_DebugIntent intent) async {

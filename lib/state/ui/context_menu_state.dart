@@ -34,6 +34,6 @@ class ContextMenuState extends ChangeNotifier {
   }
 
   openDebugMenu(BuildContext context) {
-    _openContextMenu(DebugContextMenu(), Provider.of<MouseState>(context, listen: false).position);
+    _openContextMenu(DebugContextMenu(), context.read<MouseState>().position);
   }
 }
