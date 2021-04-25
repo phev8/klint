@@ -9,7 +9,7 @@ class AnnotationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MouseProvider(
       child: AnnotationsOverlay(
-        child: Frame(),
+        frame: Frame(),
       ),
     );
   }
