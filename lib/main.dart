@@ -36,7 +36,8 @@ class KLINT extends StatelessWidget {
     return MaterialApp(
       title: 'KLINT',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
+        canvasColor: Colors.grey,
       ),
       home: root(),
     );
