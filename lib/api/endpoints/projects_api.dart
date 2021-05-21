@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:klint/api/entities/project.dart';
@@ -24,5 +25,22 @@ class ProjectsApi {
 
   static Future<Response> deleteProject(String key) {
     return Api.client.delete(getUrl("$key"));
+  }
+
+  static Future<Response> uploadFileIntoProject(String projectKey, String collectionKey, File file) async {
+    FormData formData = FormData.fromMap({"file": await MultipartFile.fromFile(file.path)});
+    return Api.client.post(getUrl("$projectKey/$collectionKey/files"), data: formData);
+  }
+
+  static Future<Response> getAllProjectFiles(String projectKey, String collectionKey) {
+    return Api.client.get(getUrl("$projectKey/$collectionKey/files"));
+  }
+
+  static Future<Response> getProjectFile(String projectKey, String collectionKey, String fileName) {
+    return Api.client.get(getUrl("$projectKey/$collectionKey/files/$fileName"));
+  }
+
+  static Future<Response> deleteProjectFile(String projectKey, String collectionKey, String fileName) {
+    return Api.client.delete(getUrl("$projectKey/$collectionKey/files/$fileName"));
   }
 }
