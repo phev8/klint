@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:klint/api/entities/media_collection.dart';
 import 'package:klint/api/entities/tag_marking_option.dart';
 
-import 'enums.dart';
 import 'marking_class.dart';
 
 part 'project.g.dart';
