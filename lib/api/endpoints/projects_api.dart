@@ -37,7 +37,8 @@ class ProjectsApi {
   }
 
   static Future<Response> getProjectFile(String projectKey, String collectionKey, String fileName) {
-    return Api.client.get(getUrl("$projectKey/$collectionKey/files/$fileName"));
+    return Api.client
+        .get(getUrl("$projectKey/$collectionKey/files/$fileName"), options: Options(responseType: ResponseType.bytes));
   }
 
   static Future<Response> deleteProjectFile(String projectKey, String collectionKey, String fileName) {
