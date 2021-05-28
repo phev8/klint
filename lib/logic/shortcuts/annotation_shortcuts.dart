@@ -24,28 +24,28 @@ class AnnotationShortcuts extends ShortcutsDefinition {
               return;
             }),
             _DebugIntent: CallbackAction<_DebugIntent>(onInvoke: (_DebugIntent intent) async {
-              await Api.call(
-                getContext(),
-                () => ProjectsApi.putProject(
-                  "test2",
-                  Project(
-                    "TestProject",
-                    ProjectMediaType.IMAGES,
-                    [MarkingClass("car", "Car", MarkingScope.OBJECTS)],
-                    [
-                      TagMarkingOption("dlvl", "Danger Level", "", ["Low", "Medium", "High"], true)
-                    ],
-                  ),
-                ),
-              );
+              // await Api.call(
+              //   getContext(),
+              //   () => ProjectsApi.putProject(
+              //     "test2",
+              //     Project(
+              //       "TestProject",
+              //       ProjectMediaType.IMAGES,
+              //       [MarkingClass("car", "Car", MarkingScope.OBJECTS)],
+              //       [
+              //         TagMarkingOption("dlvl", "Danger Level", "", ["Low", "Medium", "High"], true)
+              //       ],
+              //     ),
+              //   ),
+              // );
 
-              // await Api.call(getContext(), () => ProjectsApi.deleteProject("0"));
+              // // await Api.call(getContext(), () => ProjectsApi.deleteProject("0"));
 
-              Api.call(getContext(), ProjectsApi.getAllProjects, onSuccess: (response) {
-                response.data.forEach((element) {
-                  print(ProjectContainer.fromJson(element).toJson());
-                });
-              });
+              // Api.call(getContext(), ProjectsApi.getAllProjects, onSuccess: (response) {
+              //   response.data.forEach((element) {
+              //     print(ProjectContainer.fromJson(element).toJson());
+              //   });
+              // });
               return;
             }),
           },
