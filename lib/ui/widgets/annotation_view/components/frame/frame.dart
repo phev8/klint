@@ -6,17 +6,37 @@ import 'package:klint/api/entities/enums.dart';
 import 'package:klint/state/app_state.dart';
 import 'package:provider/provider.dart';
 
-class Frame extends StatelessWidget {
+class Frame extends StatefulWidget {
+  @override
+  _FrameState createState() => _FrameState();
+}
+
+class _FrameState extends State<Frame> {
+  Response? mediaResponse;
+  String? projectKey;
+  String? mediaCollectionId;
+  String? mediaKey;
+
   Future<Response?> getMediaResponse(BuildContext context, AppState state) async {
-    Response? futureResponse;
+    if (mediaResponse != null &&
+        projectKey == state.projectKey &&
+        mediaCollectionId == state.mediaCollection.id &&
+        mediaKey == state.mediaKey) {
+      return mediaResponse;
+    }
+
+    projectKey = state.projectKey;
+    mediaCollectionId = state.mediaCollection.id;
+    mediaKey = state.mediaKey;
+
     await Api.call(
       context,
       () => ProjectsApi.getProjectFile(state.projectKey, state.mediaCollection.id, state.mediaKey),
       onSuccess: (Response response) {
-        futureResponse = response;
+        mediaResponse = response;
       },
     );
-    return futureResponse;
+    return mediaResponse;
   }
 
   @override
