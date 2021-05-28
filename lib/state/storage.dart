@@ -37,5 +37,5 @@ class Storage {
     }
   }
 
-  static String get mediaKey => _instance.getString(MEDIA_KEY_KEY) ?? "test.jpg";
+  static String get mediaKey => _instance.getString(MEDIA_KEY_KEY) ?? "0.jpg";
 }
