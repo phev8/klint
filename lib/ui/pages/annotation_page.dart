@@ -7,7 +7,7 @@ class AnnotationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShortcutsInjector(
-      shortcutsDefinition: AnnotationShortcuts(() => context),
+      shortcutsDefinition: AnnotationShortcuts(),
       child: AnnotationView(),
     );
   }

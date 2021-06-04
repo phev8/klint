@@ -9,15 +9,10 @@ class ShortcutsInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shortcuts(
-      shortcuts: shortcutsDefinition.shortcuts,
-      child: Actions(
-        actions: shortcutsDefinition.actions,
-        child: Focus(
-          autofocus: true,
-          child: child,
-        ),
-      ),
+    return Focus(
+      autofocus: true,
+      onKey: (_, event) => shortcutsDefinition.onKey(context, event),
+      child: child,
     );
   }
 }
