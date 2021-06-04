@@ -4,6 +4,8 @@ import 'package:klint/logic/shortcuts/shortcuts_definition.dart';
 import 'package:klint/state/ui/context_menu_state.dart';
 import 'package:klint/ui/context_menus/context_menu.dart';
 import 'package:klint/ui/context_menus/context_menu_items/items/debug_item.dart';
+import 'package:klint/ui/context_menus/context_menu_items/items/spacing_item.dart';
+import 'package:klint/ui/context_menus/context_menu_items/items/title_item.dart';
 import 'package:provider/provider.dart';
 
 class AnnotationShortcuts extends ShortcutsDefinition {
@@ -16,6 +18,8 @@ class AnnotationShortcuts extends ShortcutsDefinition {
           <Type, Action<Intent>>{
             _TagIntent: CallbackAction<_TagIntent>(onInvoke: (_TagIntent intent) {
               getContext().read<ContextMenuState>().openContextMenu(ContextMenu([
+                    TitleItem("Debug Title"),
+                    SpacingItem(),
                     DebugItem(),
                     DebugItem(),
                     DebugItem(),

@@ -18,6 +18,7 @@ class ContextMenu extends StatefulWidget {
 
 class _ContextMenuState extends State<ContextMenu> {
   static const double _width = 200;
+  static const double _padding = 8.0;
   double _height = 0;
   Offset _position = Offset.zero;
 
@@ -28,15 +29,22 @@ class _ContextMenuState extends State<ContextMenu> {
   initState() {
     super.initState();
     widget.items.forEach((item) => _height += item.calculateHeight());
+    _height += _padding * 2;
     _position = widget.position ?? context.read<MouseState>().position;
   }
 
   Widget _menu() {
     return SizedBox(
       width: _width,
-      child: Column(
-        children: widget.items,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Container(
+        color: Colors.grey.shade800,
+        child: Padding(
+          padding: const EdgeInsets.all(_padding),
+          child: Column(
+            children: widget.items,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+          ),
+        ),
       ),
     );
   }
