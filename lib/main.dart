@@ -7,6 +7,7 @@ import 'package:klint/ui/widgets/mouse_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'logic/config.dart';
+import 'state/data/project_state.dart';
 
 void main() async {
   await initialize();
@@ -21,11 +22,20 @@ Future initialize() async {
 
 class KLINT extends StatelessWidget {
   Widget root() {
-    return MouseProvider(
-      child: ContextMenuInjector(
-        child: ChangeNotifierProvider(
-          create: (_) => AppState(),
-          child: AnnotationPage(),
+    return ChangeNotifierProvider(
+      create: (_) => AppState(),
+      child: Selector<AppState, String>(
+        selector: (_, appState) => appState.projectKey,
+        builder: (context, projectKey, child) => ChangeNotifierProxyProvider0<ProjectState>(
+          create: (context) => ProjectState(context, projectKey),
+          update: (context, oldState) =>
+              (oldState?.projectKey == projectKey) ? oldState! : ProjectState(context, projectKey),
+          child: child,
+        ),
+        child: MouseProvider(
+          child: ContextMenuInjector(
+            child: AnnotationPage(),
+          ),
         ),
       ),
     );
