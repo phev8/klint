@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:klint/api/entities/media_collection.dart';
-import 'package:klint/state/storage.dart';
+import 'package:klint/state/persistent/storage.dart';
 
 class AppState extends ChangeNotifier {
   String _projectKey = Storage.projectKey;

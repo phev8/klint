@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:klint/api/api.dart';
 import 'package:klint/api/endpoints/projects_api.dart';
 import 'package:klint/api/entities/enums.dart';
-import 'package:klint/state/app_state.dart';
+import 'package:klint/state/persistent/app_state.dart';
 import 'package:provider/provider.dart';
 
 class Frame extends StatefulWidget {
