@@ -25,6 +25,8 @@ class AnnotationShortcuts extends ShortcutsDefinition {
             DebugItem(),
             DebugItem(),
           ]));
+      return true;
     }
+    return false;
   }
 }
