@@ -22,19 +22,21 @@ Future initialize() async {
 
 class KLINT extends StatelessWidget {
   Widget root() {
-    return ChangeNotifierProvider(
-      create: (_) => AppState(),
-      child: Selector<AppState, String>(
-        selector: (_, appState) => appState.projectKey,
-        builder: (context, projectKey, child) => ChangeNotifierProxyProvider0<ProjectState>(
-          create: (context) => ProjectState(context, projectKey),
-          update: (context, oldState) =>
-              (oldState?.projectKey == projectKey) ? oldState! : ProjectState(context, projectKey),
-          child: child,
-        ),
-        child: MouseProvider(
-          child: ContextMenuInjector(
-            child: AnnotationPage(),
+    return Scaffold(
+      body: ChangeNotifierProvider(
+        create: (_) => AppState(),
+        child: Selector<AppState, String>(
+          selector: (_, appState) => appState.projectKey,
+          builder: (context, projectKey, child) => ChangeNotifierProxyProvider0<ProjectState>(
+            create: (context) => ProjectState(context, projectKey),
+            update: (context, oldState) =>
+                (oldState?.projectKey == projectKey) ? oldState! : ProjectState(context, projectKey),
+            child: child,
+          ),
+          child: MouseProvider(
+            child: ContextMenuInjector(
+              child: AnnotationPage(),
+            ),
           ),
         ),
       ),
