@@ -19,8 +19,8 @@ class TagContextMenu extends ContextMenu {
   factory TagContextMenu(BuildContext context, ProjectState projectState, MarkingDataState markingDataState) {
     List<ContextMenuItem> items;
 
-    if (projectState.projectKey != "" && projectState.project == null) {
-      items = [SectionTitleItem("No Tags")];
+    if ((projectState.projectKey != "" && projectState.project == null) || markingDataState.markingData == null) {
+      items = [SectionTitleItem("Loading")];
     } else if (projectState.project == null || projectState.project!.tagMarkingOptions.length == 0) {
       items = [SectionTitleItem("No Tags")];
     } else {
