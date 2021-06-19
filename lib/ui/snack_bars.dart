@@ -8,7 +8,7 @@ displayErrorSnackbar(BuildContext context, String text) {
   displaySnackBar(context, text, Colors.red);
 }
 
-displaySnackBar(BuildContext context, String text, Color color) {
+displaySnackBar(BuildContext context, String text, [Color? color]) {
   final SnackBar snackBar = SnackBar(
     content: Text(text),
     backgroundColor: color,
