@@ -6,6 +6,7 @@ import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
 import 'package:klint/ui/context_menus/context_menu.dart';
 import 'package:klint/ui/context_menus/context_menu_items/context_menu_item.dart';
+import 'package:klint/ui/context_menus/context_menu_items/items/multi_choice_item/multi_choice_item.dart';
 import 'package:klint/ui/context_menus/context_menu_items/items/section_title_item.dart';
 import 'package:tuple/tuple.dart';
 
@@ -34,22 +35,36 @@ class TagContextMenu extends ContextMenu {
                     .defaultTitle))
             .toList();
 
-        List<String> selectedClassIDs = [];
-        option.classIDs.forEach((classID) {
-          if (markingDataState.markingData!.taggedClassIDs.contains(classID)) selectedClassIDs.add(classID);
-        });
-
-        String? initiallySelected = selectedClassIDs.length > 0 ? selectedClassIDs.first : null;
-
-        return SingleChoiceItem(option.title, options, initiallySelected, (value) {
+        if (option.isSingleChoice) {
+          List<String> selectedClassIDs = [];
           option.classIDs.forEach((classID) {
-            if (value == classID) {
-              markingDataState.setTag(classID);
-            } else {
-              markingDataState.removeTag(classID);
-            }
+            if (markingDataState.markingData!.taggedClassIDs.contains(classID)) selectedClassIDs.add(classID);
           });
-        });
+
+          String? initiallySelected = selectedClassIDs.length > 0 ? selectedClassIDs.first : null;
+
+          return SingleChoiceItem(option.title, options, initiallySelected, (value) {
+            option.classIDs.forEach((classID) {
+              if (value == classID) {
+                markingDataState.setTag(classID);
+              } else {
+                markingDataState.removeTag(classID);
+              }
+            });
+          });
+        } else {
+          return MultiChoiceItem(
+            option.title,
+            options,
+            markingDataState.markingData!.taggedClassIDs,
+            (selected) {
+              markingDataState.setTag(selected);
+            },
+            (deselected) {
+              markingDataState.removeTag(deselected);
+            },
+          );
+        }
       };
 
       items = [

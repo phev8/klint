@@ -4,8 +4,8 @@ import 'package:tuple/tuple.dart';
 class SingleChoiceWidget extends StatefulWidget {
   static const double itemHeight = 42.0;
   final List<Tuple2<String, String>> options;
-  final Function(String? value) onChanged;
   final String? initiallySelected;
+  final Function(String? value) onChanged;
 
   SingleChoiceWidget(this.options, this.initiallySelected, this.onChanged);
 
