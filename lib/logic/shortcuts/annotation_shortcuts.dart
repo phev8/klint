@@ -14,10 +14,11 @@ class AnnotationShortcuts extends ShortcutsDefinition {
   onKey(context, event) {
     ContextMenuState contextMenuState = context.read<ContextMenuState>();
     if (event.isKeyPressed(LogicalKeyboardKey.keyT)) {
-      if (contextMenuState.contextMenus.isNotEmpty && contextMenuState.contextMenus.last is TagContextMenu) {
+      if (!(contextMenuState.contextMenus.isNotEmpty && contextMenuState.contextMenus.last is TagContextMenu)) {
         contextMenuState.closeContextMenu();
-      } else {
         contextMenuState.openContextMenu(_tagContextMenu);
+      } else {
+        contextMenuState.closeContextMenu();
       }
       return true;
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyS)) {

@@ -11,7 +11,9 @@ class ContextMenuState extends ChangeNotifier {
   }
 
   closeContextMenu() {
-    _contextMenus.removeLast();
-    notifyListeners();
+    if (_contextMenus.isNotEmpty) {
+      _contextMenus.removeLast();
+      notifyListeners();
+    }
   }
 }
