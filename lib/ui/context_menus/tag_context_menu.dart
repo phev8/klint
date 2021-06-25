@@ -74,7 +74,8 @@ class TagContextMenu extends ContextMenu {
         ),
         ...projectState.project!.tagMarkingOptions
             .map(createTagMarkingItem)
-            .expand((singleChoiceItem) => [singleChoiceItem, SpacingItem()]),
+            .expand((singleChoiceItem) => [singleChoiceItem, SpacingItem()])
+            .take(projectState.project!.tagMarkingOptions.length * 2 - 1),
       ];
     }
 
