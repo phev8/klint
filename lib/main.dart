@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:klint/state/persistent/app_state.dart';
 import 'package:klint/state/persistent/storage.dart';
 import 'package:klint/ui/pages/annotation_page.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:klint/ui/widgets/context_menu_injector.dart';
 import 'package:klint/ui/widgets/mouse_provider.dart';
 import 'package:provider/provider.dart';
@@ -47,11 +48,7 @@ class KLINT extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'KLINT',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.grey,
-        canvasColor: Colors.grey,
-      ),
+      theme: KlintThemeData.materialTheme,
       home: root(),
     );
   }
