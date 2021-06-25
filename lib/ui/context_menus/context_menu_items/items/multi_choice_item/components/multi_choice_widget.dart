@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
+import 'package:klint/ui/widgets/tile_title.dart';
 import 'package:tuple/tuple.dart';
 
 class MultiChoiceWidget extends StatefulWidget {
-  static const double itemHeight = 42.0;
   final List<Tuple2<String, String>> options;
   final List<String> initiallySelected;
   final Function(String value) onSelected;
@@ -10,7 +11,7 @@ class MultiChoiceWidget extends StatefulWidget {
 
   MultiChoiceWidget(this.options, this.initiallySelected, this.onSelected, this.onDeselected);
 
-  double calculateHeight() => itemHeight * options.length;
+  double calculateHeight() => KlintThemeData.tileItemHeight * options.length;
 
   @override
   State<StatefulWidget> createState() => _MultiChoiceWidgetState();
@@ -29,13 +30,10 @@ class _MultiChoiceWidgetState extends State<MultiChoiceWidget> {
 
   Widget _option(int i, Tuple2<String, String> option) {
     return Container(
-      height: MultiChoiceWidget.itemHeight,
+      height: KlintThemeData.tileItemHeight,
       alignment: Alignment.centerLeft,
       child: CheckboxListTile(
-        title: Transform.translate(
-          offset: Offset(-16, 0),
-          child: Text(option.item2),
-        ),
+        title: TileTitle(option.item2),
         value: _selected[i],
         onChanged: (bool? itemSelected) {
           if (itemSelected == null) return;

@@ -4,6 +4,7 @@ import 'package:klint/api/api.dart';
 import 'package:klint/api/endpoints/projects_api.dart';
 import 'package:klint/api/entities/enums.dart';
 import 'package:klint/state/persistent/app_state.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:provider/provider.dart';
 
 class Frame extends StatefulWidget {
@@ -57,7 +58,12 @@ class _FrameState extends State<Frame> {
                 //child = AspectRatio(aspectRatio: aspectRatio, child: video);
                 //   break;
                 default:
-                  return AspectRatio(aspectRatio: 16.0 / 9.0, child: Container(width: 16, height: 9));
+                  return AspectRatio(
+                      aspectRatio: KlintThemeData.defaultAspectRatioWidth / KlintThemeData.defaultAspectRatioHeight,
+                      child: Container(
+                        width: KlintThemeData.defaultAspectRatioWidth,
+                        height: KlintThemeData.defaultAspectRatioHeight,
+                      ));
               }
             } else {
               return CircularProgressIndicator(color: Colors.white);

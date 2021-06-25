@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
 
 class TapableOverlay extends StatelessWidget {
   final Function()? onTap;
@@ -10,7 +11,7 @@ class TapableOverlay extends StatelessWidget {
     return GestureDetector(
         onTap: onTap,
         child: Container(
-          color: Color.fromRGBO(0, 0, 0, 0.2),
+          color: KlintThemeData.overlayColor,
         ));
   }
 }

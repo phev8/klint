@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
+import 'package:klint/ui/widgets/tile_title.dart';
 import 'package:tuple/tuple.dart';
 
 class SingleChoiceWidget extends StatefulWidget {
-  static const double itemHeight = 42.0;
   final List<Tuple2<String, String>> options;
   final String? initiallySelected;
   final Function(String? value) onChanged;
 
   SingleChoiceWidget(this.options, this.initiallySelected, this.onChanged);
 
-  double calculateHeight() => itemHeight * options.length;
+  double calculateHeight() => KlintThemeData.tileItemHeight * options.length;
 
   @override
   State<StatefulWidget> createState() => _SingleChoiceWidgetState();
@@ -26,13 +27,10 @@ class _SingleChoiceWidgetState extends State<SingleChoiceWidget> {
 
   Widget _option(Tuple2<String, String> option) {
     return Container(
-      height: SingleChoiceWidget.itemHeight,
+      height: KlintThemeData.tileItemHeight,
       alignment: Alignment.centerLeft,
       child: RadioListTile<String>(
-        title: Transform.translate(
-          offset: Offset(-16, 0),
-          child: Text(option.item2),
-        ),
+        title: TileTitle(option.item2),
         value: option.item1,
         groupValue: _selected,
         toggleable: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:klint/state/ui/context_menu_state.dart';
 import 'package:klint/state/ui/mouse_state.dart';
+import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:klint/ui/widgets/tapable_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -17,29 +18,27 @@ class ContextMenu extends StatefulWidget {
 }
 
 class _ContextMenuState extends State<ContextMenu> {
-  static const double _width = 200;
-  static const double _padding = 8.0;
   double _height = 0;
   Offset _position = Offset.zero;
 
-  double get width => _width;
+  double get width => KlintThemeData.contextMenuWidth;
   double get height => _height;
 
   @override
   initState() {
     super.initState();
     widget.items.forEach((item) => _height += item.calculateHeight());
-    _height += _padding * 2;
+    _height += KlintThemeData.contextMenuPadding * 2;
     _position = widget.position ?? context.read<MouseState>().position;
   }
 
   Widget _menu() {
     return SizedBox(
-      width: _width,
+      width: KlintThemeData.contextMenuWidth,
       child: Container(
         color: Colors.grey.shade800,
         child: Padding(
-          padding: const EdgeInsets.all(_padding),
+          padding: const EdgeInsets.all(KlintThemeData.contextMenuPadding),
           child: Column(
             children: widget.items,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,7 +58,7 @@ class _ContextMenuState extends State<ContextMenu> {
     double? right;
     double? bottom;
 
-    if (_position.dx + _width > window.width) {
+    if (_position.dx + KlintThemeData.contextMenuWidth > window.width) {
       right = 0;
     } else {
       left = _position.dx;
