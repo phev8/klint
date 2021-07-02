@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AnnotationPainter extends CustomPainter {
+  final BuildContext context;
+
+  AnnotationPainter(this.context);
+
   @override
   void paint(Canvas canvas, Size size) {
     var rect = Offset.zero & size;

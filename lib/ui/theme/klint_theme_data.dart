@@ -12,6 +12,10 @@ class KlintThemeData {
       TextStyle(fontSize: 16.0, height: 1.0, color: Colors.grey, fontWeight: FontWeight.bold, letterSpacing: .5);
   static const tileTitleTextStyle = TextStyle(fontSize: 14.0);
   static const snackBarTextStyle = TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.white);
+  static const annotationBarTextStyle =
+      TextStyle(fontSize: 14.0, height: 1.0, color: Colors.grey, fontWeight: FontWeight.bold);
+  static const annotationBarSelectedTextStyle =
+      TextStyle(fontSize: 14.0, height: 1.0, color: Colors.white, fontWeight: FontWeight.bold);
 
   static const double defaultSpacing = 8.0;
 

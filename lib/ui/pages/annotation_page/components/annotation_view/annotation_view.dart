@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:klint/ui/widgets/annotation_view/components/annotations_overlay/annotations_overlay.dart';
+import 'package:klint/ui/widgets/mouse_provider.dart';
 
-import '../mouse_provider.dart';
+import 'components/annotations_overlay/annotations_overlay.dart';
 import 'components/frame/frame.dart';
 
 class AnnotationView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:klint/state/persistent/app_state.dart';
 import 'package:klint/state/persistent/storage.dart';
-import 'package:klint/ui/pages/annotation_page.dart';
+import 'package:klint/ui/pages/annotation_page/annotation_page.dart';
 import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:klint/ui/widgets/context_menu_injector.dart';
 import 'package:klint/ui/widgets/mouse_provider.dart';
