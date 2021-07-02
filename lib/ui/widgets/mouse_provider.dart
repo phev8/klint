@@ -10,23 +10,23 @@ class MouseProvider extends StatelessWidget {
 
   const MouseProvider({Key? key, required this.child, this.mouseCursor}) : super(key: key);
 
-  void onMove(BuildContext context, PointerEvent event) {
+  void _onMove(BuildContext context, PointerEvent event) {
     context.read<MouseState>().position = event.localPosition;
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MouseState(),
+      create: (_) => (mouseCursor != null) ? MouseState(mouseCursor!) : MouseState(),
       builder: (context, _) => MouseRegion(
-        onHover: (event) => onMove(context, event),
+        onHover: (event) => _onMove(context, event),
         onEnter: (_) => context.read<MouseState>().isPresent = true,
         onExit: (_) => context.read<MouseState>().isPresent = false,
-        cursor: mouseCursor ?? MouseCursor.defer,
+        cursor: context.read<MouseState>().cursor,
         opaque: false,
         child: Listener(
           // TODO: Remove this once MouseRegion has this feature.
-          onPointerMove: (event) => onMove(context, event),
+          onPointerMove: (event) => _onMove(context, event),
           behavior: HitTestBehavior.translucent,
           child: child,
         ),
