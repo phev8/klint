@@ -4,18 +4,32 @@ import 'package:klint/api/entities/marking_class.dart';
 import 'package:klint/api/entities/tag_marking_option.dart';
 import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
+import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/ui/context_menus/context_menu.dart';
 import 'package:klint/ui/context_menus/context_menu_items/context_menu_item.dart';
 import 'package:klint/ui/context_menus/context_menu_items/items/multi_choice_item/multi_choice_item.dart';
 import 'package:klint/ui/context_menus/context_menu_items/items/section_title_item.dart';
 import 'package:tuple/tuple.dart';
+import 'package:provider/provider.dart';
 
 import 'context_menu_items/items/single_choice_item/single_choice_item.dart';
 import 'context_menu_items/items/spacing_item.dart';
 import 'context_menu_items/items/title_item.dart';
 
 class TagContextMenu extends ContextMenu {
-  TagContextMenu._(List<ContextMenuItem> items) : super(items);
+  final BuildContext _context;
+
+  TagContextMenu._(this._context, List<ContextMenuItem> items) : super(items);
+
+  @override
+  onOpen() {
+    _context.read<AnnotationBarState>().tags = true;
+  }
+
+  @override
+  onClose() {
+    _context.read<AnnotationBarState>().tags = false;
+  }
 
   factory TagContextMenu(BuildContext context, ProjectState projectState, MarkingDataState markingDataState) {
     List<ContextMenuItem> items;
@@ -79,6 +93,6 @@ class TagContextMenu extends ContextMenu {
       ];
     }
 
-    return TagContextMenu._(items);
+    return TagContextMenu._(context, items);
   }
 }

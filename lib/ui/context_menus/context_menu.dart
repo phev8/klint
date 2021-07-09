@@ -13,6 +13,9 @@ class ContextMenu extends StatefulWidget {
 
   ContextMenu(this.items, [this.position]);
 
+  onOpen() {}
+  onClose() {}
+
   @override
   _ContextMenuState createState() => _ContextMenuState();
 }
