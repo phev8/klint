@@ -4,6 +4,8 @@ import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
 import 'package:klint/state/persistent/app_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
+import 'package:klint/state/ui/annotation_state/annotation_mode.dart';
+import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/ui/context_menus/tag_context_menu.dart';
 import 'package:klint/ui/pages/annotation_page/components/annotation_bar/annotation_bar.dart';
 import 'package:klint/ui/widgets/shortcuts_injector.dart';
@@ -13,6 +15,15 @@ import 'package:tuple/tuple.dart';
 import 'components/annotation_view/annotation_view.dart';
 
 class AnnotationPage extends StatelessWidget {
+  Widget _annotationViewBuilder(context, projectState, markingDataState, child) {
+    return ChangeNotifierProvider<AnnotationState>(
+      create: (_) => AnnotationState(),
+      child: ShortcutsInjector(
+          shortcutsDefinition: AnnotationShortcuts(TagContextMenu(context, projectState, markingDataState)),
+          child: child!),
+    );
+  }
+
   Widget _annotationView(BuildContext context) {
     return Expanded(
       child: Selector<AppState, Tuple3<String, String, String>>(
@@ -26,9 +37,7 @@ class AnnotationPage extends StatelessWidget {
                     ? oldState!
                     : MarkingDataState(context, appStateKeys.item1, appStateKeys.item2, appStateKeys.item3),
                 builder: (_, __) => Consumer2<ProjectState, MarkingDataState>(
-                  builder: (context, projectState, markingDataState, child) => ShortcutsInjector(
-                      shortcutsDefinition: AnnotationShortcuts(TagContextMenu(context, projectState, markingDataState)),
-                      child: child!),
+                  builder: _annotationViewBuilder,
                   child: AnnotationView(),
                 ),
               )),

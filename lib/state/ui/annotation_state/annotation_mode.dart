@@ -1,0 +1,4 @@
+enum AnnotationMode {
+  NONE,
+  BOX,
+}
