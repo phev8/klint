@@ -4,7 +4,6 @@ import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
 import 'package:klint/state/persistent/app_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
-import 'package:klint/state/ui/annotation_state/annotation_mode.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/ui/context_menus/tag_context_menu.dart';
 import 'package:klint/ui/pages/annotation_page/components/annotation_bar/annotation_bar.dart';
