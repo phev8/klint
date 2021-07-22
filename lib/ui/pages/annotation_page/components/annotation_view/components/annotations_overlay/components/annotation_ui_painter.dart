@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/state/ui/mouse_state.dart';
 import 'package:klint/ui/theme/klint_theme_data.dart';
 
 class AnnotationUIPainter extends CustomPainter {
   final MouseState mouseState;
+  final AnnotationState annotationState;
 
-  AnnotationUIPainter(this.mouseState) : super(repaint: mouseState);
+  AnnotationUIPainter(this.mouseState, this.annotationState)
+      : super(repaint: Listenable.merge([mouseState, annotationState]));
 
   @override
   void paint(Canvas canvas, Size size) {

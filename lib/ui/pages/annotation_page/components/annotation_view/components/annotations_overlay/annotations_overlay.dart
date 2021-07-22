@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/state/ui/mouse_state.dart';
 import 'package:klint/ui/widgets/mouse_provider.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,9 @@ class AnnotationsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      foregroundPainter: AnnotationUIPainter(Provider.of<MouseState>(context, listen: false)),
+      foregroundPainter: AnnotationUIPainter(
+          Provider.of<MouseState>(context, listen: false),
+          Provider.of<AnnotationState>(context, listen: false)),
       child: Container(
         color: Theme.of(context).canvasColor,
         child: Center(

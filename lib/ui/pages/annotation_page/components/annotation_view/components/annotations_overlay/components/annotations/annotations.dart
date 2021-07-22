@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:touchable/touchable.dart';
 
 import 'annotation_painter.dart';
 
@@ -9,9 +10,10 @@ class Annotations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      foregroundPainter: AnnotationPainter(context),
-      child: frame,
-    );
+    return CanvasTouchDetector(
+        builder: (context) => CustomPaint(
+              foregroundPainter: AnnotationPainter(context),
+              child: frame,
+            ));
   }
 }
