@@ -31,12 +31,15 @@ class TagContextMenu extends ContextMenu {
     _context.read<AnnotationBarState>().tags = false;
   }
 
-  factory TagContextMenu(BuildContext context, ProjectState projectState, MarkingDataState markingDataState) {
+  factory TagContextMenu(BuildContext context, ProjectState projectState,
+      MarkingDataState markingDataState) {
     List<ContextMenuItem> items;
 
-    if ((projectState.projectKey != "" && projectState.project == null) || markingDataState.markingData == null) {
+    if ((projectState.projectKey != "" && projectState.project == null) ||
+        markingDataState.markingData == null) {
       items = [SectionTitleItem("Loading")];
-    } else if (projectState.project == null || projectState.project!.tagMarkingOptions.length == 0) {
+    } else if (projectState.project == null ||
+        projectState.project!.tagMarkingOptions.length == 0) {
       items = [SectionTitleItem("No Tags")];
     } else {
       var createTagMarkingItem = (TagMarkingOption option) {
@@ -45,19 +48,23 @@ class TagContextMenu extends ContextMenu {
                 classID,
                 projectState.project!.classes
                     .firstWhere((tagClass) => tagClass.classID == classID,
-                        orElse: () => MarkingClass(classID, classID, MarkingScope.TAGS))
+                        orElse: () => MarkingClass(classID, classID,
+                            MarkingScope.TAGS, [255, 0, 255, 0]))
                     .defaultTitle))
             .toList();
 
         if (option.isSingleChoice) {
           List<String> selectedClassIDs = [];
           option.classIDs.forEach((classID) {
-            if (markingDataState.markingData!.taggedClassIDs.contains(classID)) selectedClassIDs.add(classID);
+            if (markingDataState.markingData!.taggedClassIDs.contains(classID))
+              selectedClassIDs.add(classID);
           });
 
-          String? initiallySelected = selectedClassIDs.length > 0 ? selectedClassIDs.first : null;
+          String? initiallySelected =
+              selectedClassIDs.length > 0 ? selectedClassIDs.first : null;
 
-          return SingleChoiceItem(option.title, options, initiallySelected, (value) {
+          return SingleChoiceItem(option.title, options, initiallySelected,
+              (value) {
             option.classIDs.forEach((classID) {
               if (value == classID) {
                 markingDataState.setTag(classID);

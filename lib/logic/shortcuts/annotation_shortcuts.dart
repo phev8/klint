@@ -30,8 +30,10 @@ class AnnotationShortcuts extends ShortcutsDefinition {
   @override
   onKey(context, event) {
     ContextMenuState contextMenuState = context.read<ContextMenuState>();
+    AnnotationState annotationState = context.read<AnnotationState>();
     if (event.isKeyPressed(LogicalKeyboardKey.keyT)) {
-      if (!(contextMenuState.contextMenus.isNotEmpty && contextMenuState.contextMenus.last is TagContextMenu)) {
+      if (!(contextMenuState.contextMenus.isNotEmpty &&
+          contextMenuState.contextMenus.last is TagContextMenu)) {
         contextMenuState.closeContextMenu();
         contextMenuState.openContextMenu(_tagContextMenu);
       } else {
@@ -48,6 +50,7 @@ class AnnotationShortcuts extends ShortcutsDefinition {
         _toggleAnnotationMode(context, AnnotationMode.BOX);
       }
     }
+    annotationState.borderSelection = event.isAltPressed;
     return false;
   }
 }
