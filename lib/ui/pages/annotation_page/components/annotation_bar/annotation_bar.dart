@@ -17,6 +17,7 @@ class AnnotationBar extends StatelessWidget {
               AnnotationBarItem("(B)ox", state.box),
               AnnotationBarItem("(T)ags", state.tags),
               AnnotationBarItem("(S)ave", state.save),
+              AnnotationBarItem("(D)elete", state.delete)
             ],
           );
         },

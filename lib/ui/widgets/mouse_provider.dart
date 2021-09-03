@@ -17,7 +17,7 @@ class MouseProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => (mouseCursor != null) ? MouseState(mouseCursor!) : MouseState(),
+      create: (_) => (mouseCursor != null) ? MouseState() : MouseState(),
       builder: (context, _) => MouseRegion(
         onHover: (event) => _onMove(context, event),
         onEnter: (_) => context.read<MouseState>().isPresent = true,

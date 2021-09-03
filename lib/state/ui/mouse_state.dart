@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 class MouseState extends ChangeNotifier {
-  MouseCursor _cursor;
+  MouseCursor _cursor = SystemMouseCursors.precise;
   Offset _position = Offset.zero;
   bool _isPresent = true;
 
-  MouseState([this._cursor = MouseCursor.defer]);
+  MouseState();
 
   MouseCursor get cursor => _cursor;
   Offset get position => _position;
   bool get isPresent => _isPresent;
 
   set cursor(MouseCursor value) {
-    _cursor = value;
-    notifyListeners();
+    if (value != _cursor) {
+      _cursor = value;
+      notifyListeners();
+    }
   }
 
   set position(Offset value) {

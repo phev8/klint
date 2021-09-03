@@ -16,8 +16,8 @@ class AnnotationsOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: AnnotationUIPainter(
-          Provider.of<MouseState>(context, listen: false),
-          Provider.of<AnnotationState>(context, listen: false)),
+          Provider.of<MouseState>(context, listen: true),
+          Provider.of<AnnotationState>(context, listen: true)),
       child: Container(
         color: Theme.of(context).canvasColor,
         child: Center(

@@ -15,8 +15,11 @@ class MarkingDataState extends ChangeNotifier {
 
   MarkingData? get markingData => _markingData;
 
-  MarkingDataState(this.context, this.projectKey, this.collectionKey, this.mediaKey) {
-    Api.call(context, () => MarkingsApi.getMarkingData(projectKey, collectionKey, mediaKey), onSuccess: (response) {
+  MarkingDataState(
+      this.context, this.projectKey, this.collectionKey, this.mediaKey) {
+    Api.call(context,
+        () => MarkingsApi.getMarkingData(projectKey, collectionKey, mediaKey),
+        onSuccess: (response) {
       _markingData = MarkingDataContainer.fromJson(response.data).value;
       notifyListeners();
     });
@@ -28,18 +31,24 @@ class MarkingDataState extends ChangeNotifier {
       return;
     }
 
-    Api.call(context, () => MarkingsApi.putMarkingData(projectKey, collectionKey, mediaKey, _markingData!),
+    Api.call(
+        context,
+        () => MarkingsApi.putMarkingData(
+            projectKey, collectionKey, mediaKey, _markingData!),
         onSuccess: (response) {
       displaySuccessSnackbar(context, "Saved Successfully");
     }, onException: (e) {
-      displayErrorSnackbar(context, "Saving Failed. Exception: ${e.toString()}");
+      displayErrorSnackbar(
+          context, "Saving Failed. Exception: ${e.toString()}");
     }, onServerError: (e) {
-      displayErrorSnackbar(context, "Saving Failed. Server Error: ${e.toString()}");
+      displayErrorSnackbar(
+          context, "Saving Failed. Server Error: ${e.toString()}");
     });
   }
 
   setTag(String classID) {
-    if (_markingData != null && !_markingData!.taggedClassIDs.contains(classID)) {
+    if (_markingData != null &&
+        !_markingData!.taggedClassIDs.contains(classID)) {
       _markingData!.taggedClassIDs.add(classID);
       notifyListeners();
     }
@@ -50,5 +59,10 @@ class MarkingDataState extends ChangeNotifier {
       bool success = _markingData!.taggedClassIDs.remove(classID);
       if (success) notifyListeners();
     }
+  }
+
+  set markingData(MarkingData? data) {
+    _markingData = data;
+    notifyListeners();
   }
 }

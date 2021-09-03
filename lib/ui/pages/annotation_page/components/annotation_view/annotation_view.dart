@@ -9,7 +9,7 @@ class AnnotationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseProvider(
-      mouseCursor: SystemMouseCursors.precise,
+      mouseCursor: MouseCursor.defer,
       child: AnnotationsOverlay(
         frame: Frame(),
       ),

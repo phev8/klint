@@ -1,4 +1,1 @@
-enum AnnotationMode {
-  NONE,
-  BOX,
-}
+enum AnnotationMode { NONE, BOX, DELETE }
