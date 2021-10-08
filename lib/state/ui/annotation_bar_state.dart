@@ -7,11 +7,13 @@ class AnnotationBarState extends ChangeNotifier {
   bool _tags = false;
   bool _save = false;
   bool _delete = false;
+  bool _classes = false;
 
   bool get box => _box;
   bool get tags => _tags;
   bool get save => _save;
   bool get delete => _delete;
+  bool get classes => _classes;
 
   set box(bool value) {
     _box = value;
@@ -30,6 +32,11 @@ class AnnotationBarState extends ChangeNotifier {
 
   set delete(bool value) {
     _delete = value;
+    notifyListeners();
+  }
+
+  set classes(bool value) {
+    _classes = value;
     notifyListeners();
   }
 

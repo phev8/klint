@@ -21,6 +21,7 @@ class AppState extends ChangeNotifier {
     _mediaCollection = value;
     Storage.mediaCollection = value;
     notifyListeners();
+
   }
 
   set mediaKey(String value) {

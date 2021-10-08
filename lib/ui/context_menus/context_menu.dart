@@ -84,7 +84,9 @@ class _ContextMenuState extends State<ContextMenu> {
       children: <Widget>[
         Positioned.fill(
           child: TapableOverlay(
-            onTap: () => context.read<ContextMenuState>().closeContextMenu(),
+            onTap: () {
+              context.read<ContextMenuState>().closeContextMenu();
+            },
           ),
         ),
         Positioned(

@@ -1,23 +1,84 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:klint/api/api.dart';
+import 'package:klint/api/endpoints/projects_api.dart';
 import 'package:klint/api/entities/marking_data.dart';
 import 'package:klint/logic/shortcuts/shortcuts_definition.dart';
 import 'package:klint/state/data/marking_data_state.dart';
+import 'package:klint/state/persistent/app_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/state/ui/annotation_state/annotation_mode.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/state/ui/context_menu_state.dart';
+import 'package:klint/ui/context_menus/class_context_menu.dart';
 import 'package:klint/ui/context_menus/tag_context_menu.dart';
 import 'package:provider/provider.dart';
 
 class AnnotationShortcuts extends ShortcutsDefinition {
-  TagContextMenu _tagContextMenu;
+  final BuildContext _context;
 
-  AnnotationShortcuts(this._tagContextMenu);
+  TagContextMenu _tagContextMenu;
+  ClassContextMenu _classContextMenu;
+
+  List<dynamic> mediaKeys = [];
+
+  AnnotationShortcuts(this._context, this._tagContextMenu, this._classContextMenu) {
+    AppState appState = _context.read<AppState>();
+    Api.call(_context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
+      //print(response.data.toString());
+      var result = jsonDecode(response.data.toString());
+      //print(result);
+      mediaKeys = result;
+    });
+  }
 
   _setAnnotationMode(BuildContext context, AnnotationMode newMode) {
     context.read<AnnotationState>().mode = newMode;
     context.read<AnnotationBarState>().setAnnotationMode(newMode);
+  }
+
+  Future _asyncInputDialog(
+      BuildContext context, AppState appState, AnnotationState annotationState, AnnotationBarState annotationBarState) async {
+    String input = '';
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Jump to Image'),
+          content: new Row(
+            children: [
+              new Expanded(
+                  child: new TextField(
+                autofocus: false,
+                decoration: new InputDecoration(helperText: 'file name / frame', hintText: 'img0.jpg'),
+                onChanged: (value) {
+                  input = value;
+                },
+              ))
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop(input);
+                if (input.length > 0) {
+                  int currentIndex = mediaKeys.indexOf(input);
+                  if (currentIndex >= 0) {
+                    appState.mediaKey = mediaKeys[currentIndex];
+                    //TODO: Fix this workaround.
+                    annotationBarState.setAnnotationMode(annotationState.mode);
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -26,6 +87,7 @@ class AnnotationShortcuts extends ShortcutsDefinition {
     AnnotationState annotationState = context.read<AnnotationState>();
     AnnotationBarState annotationBarState = context.read<AnnotationBarState>();
     MarkingDataState markingDataState = context.read<MarkingDataState>();
+    AppState appState = context.read<AppState>();
 
     //  T
     if (event.isKeyPressed(LogicalKeyboardKey.keyT)) {
@@ -35,7 +97,16 @@ class AnnotationShortcuts extends ShortcutsDefinition {
       } else {
         contextMenuState.closeContextMenu();
       }
-      return true;
+      // C
+    } else if (event.isKeyPressed(LogicalKeyboardKey.keyC)) {
+      if ((!(contextMenuState.contextMenus.isNotEmpty && contextMenuState.contextMenus.last is ClassContextMenu)) &&
+          annotationState.selectedBoxMarkings.isNotEmpty) {
+        contextMenuState.closeContextMenu();
+        contextMenuState.openContextMenu(_classContextMenu);
+      } else {
+        contextMenuState.closeContextMenu();
+      }
+
       //  S
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyS)) {
       context.read<MarkingDataState>().saveToServer();
@@ -62,17 +133,37 @@ class AnnotationShortcuts extends ShortcutsDefinition {
           markingDataState.markingData?.boxMarkings.removeAt(index);
         }
         annotationState.emptySelection();
-        print(annotationState.mode);
+        //print(annotationState.mode);
       } else if (contextMenuState.contextMenus.isNotEmpty) {
         contextMenuState.closeContextMenu();
         _setAnnotationMode(context, AnnotationMode.DELETE);
       } else {
         _setAnnotationMode(context, AnnotationMode.DELETE);
       }
+    } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
+      Api.call(context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
+        int currentIndex = mediaKeys.indexOf(appState.mediaKey);
+        if (mediaKeys.length - 1 > currentIndex) {
+          currentIndex++;
+          appState.mediaKey = mediaKeys[currentIndex];
+        }
+      });
+    } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
+      Api.call(context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
+        int currentIndex = mediaKeys.indexOf(appState.mediaKey);
+        if (currentIndex >= 1) {
+          currentIndex--;
+          appState.mediaKey = mediaKeys[currentIndex];
+        }
+      });
+    } else if (event.isKeyPressed(LogicalKeyboardKey.keyJ)) {
+      _asyncInputDialog(context, appState, annotationState, annotationBarState);
+    } else if (event.isKeyPressed(LogicalKeyboardKey.keyR)) {
+      markingDataState.loadFromServer();
     }
     annotationState.additionalSelection = event.isShiftPressed;
     annotationState.borderSelection = event.isAltPressed;
     annotationBarState.setAnnotationMode(annotationState.mode);
-    return false;
+    return KeyEventResult.ignored;
   }
 }

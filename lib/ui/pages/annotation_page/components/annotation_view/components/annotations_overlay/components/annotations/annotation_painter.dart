@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:klint/api/entities/box_marking.dart';
+import 'package:klint/api/entities/enums.dart';
+import 'package:klint/api/entities/marking_class.dart';
 import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
@@ -65,6 +67,18 @@ class AnnotationPainter extends CustomPainter {
       Paint()
         ..color = (Colors.transparent)
         ..style = (PaintingStyle.fill),
+      onPanStart: (details) {
+        annotationState.emptySelection();
+        if (annotationState.mode == AnnotationMode.BOX) {
+          var position1 = [details.localPosition.dx / size.width, details.localPosition.dy / size.height];
+          var position2 = [(details.localPosition.dx) / size.width, (details.localPosition.dy) / size.height];
+          markingDataState.markingData!.boxMarkings.add(new BoxMarking("undefined", position1, position2));
+          //markingDataState.markingData!.boxMarkings.last.first = position1;
+          //markingDataState.markingData!.boxMarkings.last.second = position2;
+          annotationState.selectedBoxMarkings = new Set<int>.from([markingDataState.markingData!.boxMarkings.length - 1]);
+          annotationState.isCreating = true;
+        }
+      },
       onPanUpdate: (details) {},
       onTapUp: (details) {
         annotationState.emptySelection();
@@ -75,7 +89,7 @@ class AnnotationPainter extends CustomPainter {
   }
 
   void paintPanningRect(TouchyCanvas canvas, Size size, List<BoxMarking> boxMarkings, Set<int> selectedBoxes) {
-    if (annotationState.isPanning || annotationState.isResizing) {
+    if (annotationState.isPanning || annotationState.isResizing || annotationState.isCreating) {
       canvas.drawRect(
         Rect.fromLTRB(0, 0, size.width, size.height),
         Paint()
@@ -105,11 +119,18 @@ class AnnotationPainter extends CustomPainter {
                 boxRect, Offset(details.delta.dx / size.width, details.delta.dy / size.height), annotationState.resizingEdgesLTRB);
             boxMarkings.elementAt(selectedBoxIndex).first = [boxRect.topLeft.dx, boxRect.topLeft.dy];
             boxMarkings.elementAt(selectedBoxIndex).second = [boxRect.bottomRight.dx, boxRect.bottomRight.dy];
+          } else if (annotationState.isCreating) {
+            mouseState.cursor = SystemMouseCursors.move;
+            int selectedBoxIndex = selectedBoxes.first;
+            Offset secondPoint = Offset(details.localPosition.dx / size.width, details.localPosition.dy / size.height);
+            boxMarkings.elementAt(selectedBoxIndex).second = [secondPoint.dx, secondPoint.dy];
           }
         },
         onTapUp: (details) {
+          // TODO: Make these exclusive from each other!
           annotationState.isPanning = false;
           annotationState.isResizing = false;
+          annotationState.isCreating = false;
           annotationState.emptySelection();
           mouseState.cursor = SystemMouseCursors.precise;
         },
@@ -118,30 +139,42 @@ class AnnotationPainter extends CustomPainter {
   }
 
   void paintBoxMarking(TouchyCanvas canvas, Rect rect, bool selected, int index, Size size, bool borderSelection) {
-    var boxMarkings = context.read<MarkingDataState>().markingData?.boxMarkings;
-    var markingClass =
-        context.read<ProjectState>().project?.classes.where((element) => element.classID == boxMarkings![index].classID).first;
-
-    var classColor = Color.fromARGB(255, 127, 127, 127);
-    if (markingClass?.argb.length == 4) {
-      classColor = Color.fromARGB(
-          markingClass!.argb[0] as int, markingClass.argb[1] as int, markingClass.argb[2] as int, markingClass.argb[3] as int);
-    }
     const classLabelFontSize = 11.0;
     const classLabelPadding = 2.0;
+    var classColor = Color.fromARGB(255, 127, 127, 127);
+    var boxMarkings = context.read<MarkingDataState>().markingData?.boxMarkings;
+    var markingClass = new MarkingClass("undefined", "undefined", MarkingScope.OBJECTS, [255, 127, 127, 127]);
+
+    try {
+      var classLookup =
+          context.read<ProjectState>().project?.classes.where((element) => element.classID == boxMarkings![index].classID).first;
+      if (classLookup != null) {
+        markingClass = classLookup;
+      }
+    } catch (e) {}
+
+    if (markingClass.argb.length == 4) {
+      classColor = Color.fromARGB(
+          markingClass.argb[0] as int, markingClass.argb[1] as int, markingClass.argb[2] as int, markingClass.argb[3] as int);
+    }
+
     var style = TextStyle(fontSize: classLabelFontSize, height: 1.0, color: Colors.white, fontWeight: FontWeight.normal);
-
-    //var classLabel = "Class Label";
-    //classLabel = boxMarkings?.elementAt(index).classID as String;
-
     final ParagraphBuilder paragraphBuilder = ParagraphBuilder(style.getParagraphStyle())
       ..pushStyle(style.getTextStyle())
-      ..addText(markingClass!.defaultTitle);
-    final Paragraph paragraph = paragraphBuilder.build()..layout(ParagraphConstraints(width: rect.width - classLabelPadding * 2));
+      ..addText(markingClass.defaultTitle);
+    double relevantWidth = rect.width;
+    if (rect.width < 64) {
+      relevantWidth = 64;
+    }
+    final Paragraph paragraph = paragraphBuilder.build()..layout(ParagraphConstraints(width: relevantWidth - classLabelPadding * 2));
     paragraph.layout(ParagraphConstraints(width: paragraph.computeLineMetrics().first.width + classLabelPadding * 2));
+    Rect classLabelRect = Rect.fromLTWH(
+        rect.left - strokeWidth / 2,
+        rect.top - paragraph.height - classLabelPadding - (strokeWidth + outlineWidth),
+        paragraph.width + classLabelPadding * 2,
+        paragraph.height + classLabelPadding + (strokeWidth + outlineWidth));
     canvas.drawRect(
-        Rect.fromLTWH(rect.left - strokeWidth / 2, rect.top - paragraph.height - classLabelPadding - (strokeWidth + outlineWidth),
-            paragraph.width + classLabelPadding * 2, paragraph.height + classLabelPadding + (strokeWidth + outlineWidth)),
+        classLabelRect,
         Paint()
           ..color = classColor
           ..style = PaintingStyle.fill);
@@ -183,7 +216,6 @@ class AnnotationPainter extends CustomPainter {
           //annotationState.selectedBoxMarkings.add(index);
           annotationState.isPanning = true;
         }
-
       },
       onTapDown: (details) {
         //print("onTapDown");
@@ -261,7 +293,7 @@ class AnnotationPainter extends CustomPainter {
     if (edgesLTRB[3] == true) {
       newRect = Rect.fromLTRB(newRect.left, newRect.top, newRect.right, newRect.bottom + delta.dy);
     }
-    if (newRect.width < 0.015 || newRect.height < 0.015) {
+    if (!annotationState.isCreating && (newRect.width < 0.015 || newRect.height < 0.015)) {
       return rect;
     } else {
       return newRect;

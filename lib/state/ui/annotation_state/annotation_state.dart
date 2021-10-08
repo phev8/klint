@@ -8,6 +8,7 @@ class AnnotationState extends ChangeNotifier {
   bool _isAdditionalSelection = false;
   bool _isPanning = false;
   bool _isResizing = false;
+  bool _isCreating = false;
   List<bool> resizingEdgesLTRB = [false, false, false, false];
 
   AnnotationMode get mode => _mode;
@@ -16,6 +17,7 @@ class AnnotationState extends ChangeNotifier {
   bool get isAdditionalSelection => _isAdditionalSelection;
   bool get isPanning => _isPanning;
   bool get isResizing => _isResizing;
+  bool get isCreating => _isCreating;
 
   set borderSelection(bool value) {
     _borderSelection = value;
@@ -44,6 +46,11 @@ class AnnotationState extends ChangeNotifier {
 
   set isResizing(bool value) {
     _isResizing = value;
+    notifyListeners();
+  }
+
+  set isCreating(bool value) {
+    _isCreating = value;
     notifyListeners();
   }
 
