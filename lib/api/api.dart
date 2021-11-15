@@ -33,15 +33,21 @@ class Api {
   }
 
   static onResponseError(BuildContext context, Response response, Function(Response?)? onServerError) {
-    var errorMessage = "${response.statusCode}: ${response.statusMessage}\n${response.data}";
+    var errorMessage = "${response.realUri}: ${response.statusCode}: ${response.statusMessage}\n${response.data}";
     print(errorMessage);
-    ErrorDialog.display(context, errorMessage);
-    if (onServerError != null) onServerError(response);
+    if (onServerError != null) {
+      onServerError(response);
+    } else {
+      ErrorDialog.display(context, errorMessage);
+    }
   }
 
   static onExceptionError(BuildContext context, Object e, Function(Object)? onException) {
     print(e.toString());
-    ErrorDialog.display(context, e.toString());
-    if (onException != null) onException(e);
+    if (onException != null) {
+      onException(e);
+    } else {
+      ErrorDialog.display(context, e.toString());
+    }
   }
 }

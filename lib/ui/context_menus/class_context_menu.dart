@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:klint/api/entities/enums.dart';
-import 'package:klint/api/entities/marking_class.dart';
 import 'package:klint/api/entities/project.dart';
-import 'package:klint/api/entities/tag_marking_option.dart';
 import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/ui/context_menus/context_menu.dart';
 import 'package:klint/ui/context_menus/context_menu_items/context_menu_item.dart';
-import 'package:klint/ui/context_menus/context_menu_items/items/multi_choice_item/multi_choice_item.dart';
 import 'package:klint/ui/context_menus/context_menu_items/items/section_title_item.dart';
 import 'package:tuple/tuple.dart';
 import 'package:provider/provider.dart';

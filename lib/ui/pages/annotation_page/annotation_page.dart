@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:klint/logic/shortcuts/annotation_shortcuts.dart';
 import 'package:klint/state/data/marking_data_state.dart';
 import 'package:klint/state/data/project_state.dart';
-import 'package:klint/state/persistent/app_state.dart';
+import 'package:klint/state/persistent/annotation_screen_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/ui/context_menus/class_context_menu.dart';
@@ -24,7 +24,7 @@ class AnnotationPage extends StatelessWidget {
 
   Widget _annotationView(BuildContext context) {
     return Expanded(
-      child: Selector<AppState, Tuple3<String, String, String>>(
+      child: Selector<AnnotationScreenState, Tuple3<String, String, String>>(
           selector: (_, appState) => Tuple3(appState.projectKey, appState.mediaCollection.id, appState.mediaKey),
           builder: (_, appStateKeys, __) => ChangeNotifierProxyProvider0<MarkingDataState>(
                 create: (context) => MarkingDataState(context, appStateKeys.item1, appStateKeys.item2, appStateKeys.item3),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:klint/state/persistent/app_state.dart';
+import 'package:klint/state/persistent/annotation_screen_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/ui/pages/annotation_page/components/annotation_bar/components/annotation_bar_item.dart';
 import 'package:klint/ui/theme/klint_theme_data.dart';
@@ -15,7 +15,7 @@ class AnnotationBar extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnnotationBarItem(context.read<AppState>().mediaKey, false),
+              AnnotationBarItem(context.read<AnnotationScreenState>().mediaKey, false),
               AnnotationBarItem(" | ", true),
               AnnotationBarItem("(B)ox", state.box),
               AnnotationBarItem("(C)lasses", state.classes),

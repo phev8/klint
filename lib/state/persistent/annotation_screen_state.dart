@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:klint/api/entities/media_collection.dart';
 import 'package:klint/state/persistent/storage.dart';
 
-class AppState extends ChangeNotifier {
+class AnnotationScreenState extends ChangeNotifier {
   String _projectKey = Storage.projectKey;
   MediaCollection _mediaCollection = Storage.mediaCollection;
   String _mediaKey = Storage.mediaKey;
@@ -21,7 +21,6 @@ class AppState extends ChangeNotifier {
     _mediaCollection = value;
     Storage.mediaCollection = value;
     notifyListeners();
-
   }
 
   set mediaKey(String value) {

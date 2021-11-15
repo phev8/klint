@@ -5,8 +5,8 @@ part 'marking_data.g.dart';
 
 @JsonSerializable()
 class MarkingData {
-  List<String> taggedClassIDs;
-  List<BoxMarking> boxMarkings;
+  List<String> taggedClassIDs = [];
+  List<BoxMarking> boxMarkings = [];
 
   MarkingData(this.taggedClassIDs, this.boxMarkings);
   factory MarkingData.fromJson(Map<String, dynamic> json) => _$MarkingDataFromJson(json);

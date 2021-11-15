@@ -11,7 +11,7 @@ MarkingClass _$MarkingClassFromJson(Map<String, dynamic> json) {
     json['classID'] as String,
     json['defaultTitle'] as String,
     _$enumDecode(_$MarkingScopeEnumMap, json['scope']),
-    (json['argb'] as List<dynamic>).map((e) => (e as num).toDouble()).toList(),
+    (json['rgb'] as List<dynamic>).map((e) => (e as num).toDouble()).toList(),
   );
 }
 
@@ -20,7 +20,7 @@ Map<String, dynamic> _$MarkingClassToJson(MarkingClass instance) =>
       'classID': instance.classID,
       'defaultTitle': instance.defaultTitle,
       'scope': _$MarkingScopeEnumMap[instance.scope],
-      'argb': instance.argb,
+      'rgb': instance.rgb,
     };
 
 K _$enumDecode<K, V>(

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:klint/api/api.dart';
 import 'package:klint/api/endpoints/markings_api.dart';
+import 'package:klint/api/endpoints/projects_api.dart';
+import 'package:klint/api/entities/box_marking.dart';
 import 'package:klint/api/entities/marking_data.dart';
 import 'package:klint/api/entities/marking_data_container.dart';
 import 'package:klint/ui/snack_bars.dart';
@@ -10,10 +14,13 @@ class MarkingDataState extends ChangeNotifier {
   final String projectKey;
   final String collectionKey;
   final String mediaKey;
+  List<dynamic> _mediaKeys = [];
 
   MarkingData? _markingData;
 
   MarkingData? get markingData => _markingData;
+
+  List<String> get mediaKeys => _mediaKeys.cast<String>();
 
   MarkingDataState(this.context, this.projectKey, this.collectionKey, this.mediaKey) {
     loadFromServer();
@@ -23,6 +30,12 @@ class MarkingDataState extends ChangeNotifier {
     Api.call(context, () => MarkingsApi.getMarkingData(projectKey, collectionKey, mediaKey), onSuccess: (response) {
       _markingData = MarkingDataContainer.fromJson(response.data).value;
       notifyListeners();
+    }, onServerError: (_) {
+      _markingData = MarkingData(List<String>.empty(), List<BoxMarking>.empty());
+    });
+    Api.call(context, () => ProjectsApi.getAllProjectFiles(projectKey, collectionKey), onSuccess: (response) {
+      var result = jsonDecode(response.data.toString());
+      _mediaKeys = result;
     });
   }
 
@@ -43,6 +56,10 @@ class MarkingDataState extends ChangeNotifier {
 
   setTag(String classID) {
     if (_markingData != null && !_markingData!.taggedClassIDs.contains(classID)) {
+      // Deserialization makes Lists ungrowable if they are empty. This fixes it.
+      if (_markingData!.taggedClassIDs.isEmpty) {
+        _markingData!.taggedClassIDs = [];
+      }
       _markingData!.taggedClassIDs.add(classID);
       notifyListeners();
     }

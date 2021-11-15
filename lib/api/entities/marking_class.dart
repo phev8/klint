@@ -9,10 +9,9 @@ class MarkingClass {
   String classID;
   String defaultTitle;
   MarkingScope scope;
-  List<double> argb;
+  List<double> rgb;
 
-  MarkingClass(this.classID, this.defaultTitle, this.scope, this.argb);
-  factory MarkingClass.fromJson(Map<String, dynamic> json) =>
-      _$MarkingClassFromJson(json);
+  MarkingClass(this.classID, this.defaultTitle, this.scope, this.rgb);
+  factory MarkingClass.fromJson(Map<String, dynamic> json) => _$MarkingClassFromJson(json);
   Map<String, dynamic> toJson() => _$MarkingClassToJson(this);
 }

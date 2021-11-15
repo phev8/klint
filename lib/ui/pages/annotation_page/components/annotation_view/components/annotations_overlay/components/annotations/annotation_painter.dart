@@ -12,7 +12,6 @@ import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/state/ui/annotation_state/annotation_mode.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
 import 'package:klint/state/ui/mouse_state.dart';
-import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:provider/provider.dart';
 import 'package:touchable/touchable.dart';
 
@@ -72,6 +71,10 @@ class AnnotationPainter extends CustomPainter {
         if (annotationState.mode == AnnotationMode.BOX) {
           var position1 = [details.localPosition.dx / size.width, details.localPosition.dy / size.height];
           var position2 = [(details.localPosition.dx) / size.width, (details.localPosition.dy) / size.height];
+          // Deserialization makes Lists ungrowable if they are empty. This fixes it.
+          if (markingDataState.markingData!.boxMarkings.isEmpty) {
+            markingDataState.markingData!.boxMarkings = [];
+          }
           markingDataState.markingData!.boxMarkings.add(new BoxMarking("undefined", position1, position2));
           //markingDataState.markingData!.boxMarkings.last.first = position1;
           //markingDataState.markingData!.boxMarkings.last.second = position2;
@@ -153,9 +156,9 @@ class AnnotationPainter extends CustomPainter {
       }
     } catch (e) {}
 
-    if (markingClass.argb.length == 4) {
-      classColor = Color.fromARGB(
-          markingClass.argb[0] as int, markingClass.argb[1] as int, markingClass.argb[2] as int, markingClass.argb[3] as int);
+    if (markingClass.rgb.length == 3) {
+      classColor =
+          Color.fromARGB(255, (markingClass.rgb[0] * 255).toInt(), (markingClass.rgb[1] * 255).toInt(), (markingClass.rgb[2] * 255).toInt());
     }
 
     var style = TextStyle(fontSize: classLabelFontSize, height: 1.0, color: Colors.white, fontWeight: FontWeight.normal);
@@ -293,7 +296,7 @@ class AnnotationPainter extends CustomPainter {
     if (edgesLTRB[3] == true) {
       newRect = Rect.fromLTRB(newRect.left, newRect.top, newRect.right, newRect.bottom + delta.dy);
     }
-    if (!annotationState.isCreating && (newRect.width < 0.015 || newRect.height < 0.015)) {
+    if (!annotationState.isCreating && (newRect.width < 0.01 || newRect.height < 0.01)) {
       return rect;
     } else {
       return newRect;

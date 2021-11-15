@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:klint/api/api.dart';
 import 'package:klint/api/endpoints/projects_api.dart';
-import 'package:klint/api/entities/marking_data.dart';
 import 'package:klint/logic/shortcuts/shortcuts_definition.dart';
 import 'package:klint/state/data/marking_data_state.dart';
-import 'package:klint/state/persistent/app_state.dart';
+import 'package:klint/state/persistent/annotation_screen_state.dart';
 import 'package:klint/state/ui/annotation_bar_state.dart';
 import 'package:klint/state/ui/annotation_state/annotation_mode.dart';
 import 'package:klint/state/ui/annotation_state/annotation_state.dart';
@@ -22,16 +21,14 @@ class AnnotationShortcuts extends ShortcutsDefinition {
   TagContextMenu _tagContextMenu;
   ClassContextMenu _classContextMenu;
 
-  List<dynamic> mediaKeys = [];
+  late List<String> mediaKeys = _context.read<MarkingDataState>().mediaKeys;
 
   AnnotationShortcuts(this._context, this._tagContextMenu, this._classContextMenu) {
-    AppState appState = _context.read<AppState>();
+    /*     AnnotationScreenState appState = _context.read<AnnotationScreenState>();
     Api.call(_context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
-      //print(response.data.toString());
       var result = jsonDecode(response.data.toString());
-      //print(result);
       mediaKeys = result;
-    });
+    }); */
   }
 
   _setAnnotationMode(BuildContext context, AnnotationMode newMode) {
@@ -40,7 +37,7 @@ class AnnotationShortcuts extends ShortcutsDefinition {
   }
 
   Future _asyncInputDialog(
-      BuildContext context, AppState appState, AnnotationState annotationState, AnnotationBarState annotationBarState) async {
+      BuildContext context, AnnotationScreenState appState, AnnotationState annotationState, AnnotationBarState annotationBarState) async {
     String input = '';
     return showDialog(
       context: context,
@@ -87,7 +84,7 @@ class AnnotationShortcuts extends ShortcutsDefinition {
     AnnotationState annotationState = context.read<AnnotationState>();
     AnnotationBarState annotationBarState = context.read<AnnotationBarState>();
     MarkingDataState markingDataState = context.read<MarkingDataState>();
-    AppState appState = context.read<AppState>();
+    AnnotationScreenState appState = context.read<AnnotationScreenState>();
 
     //  T
     if (event.isKeyPressed(LogicalKeyboardKey.keyT)) {
@@ -141,21 +138,17 @@ class AnnotationShortcuts extends ShortcutsDefinition {
         _setAnnotationMode(context, AnnotationMode.DELETE);
       }
     } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-      Api.call(context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
-        int currentIndex = mediaKeys.indexOf(appState.mediaKey);
-        if (mediaKeys.length - 1 > currentIndex) {
-          currentIndex++;
-          appState.mediaKey = mediaKeys[currentIndex];
-        }
-      });
+      int currentIndex = mediaKeys.indexOf(appState.mediaKey);
+      if (mediaKeys.length - 1 > currentIndex) {
+        currentIndex++;
+        appState.mediaKey = mediaKeys[currentIndex];
+      }
     } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-      Api.call(context, () => ProjectsApi.getAllProjectFiles(appState.projectKey, appState.mediaCollection.id), onSuccess: (response) {
-        int currentIndex = mediaKeys.indexOf(appState.mediaKey);
-        if (currentIndex >= 1) {
-          currentIndex--;
-          appState.mediaKey = mediaKeys[currentIndex];
-        }
-      });
+      int currentIndex = mediaKeys.indexOf(appState.mediaKey);
+      if (currentIndex >= 1) {
+        currentIndex--;
+        appState.mediaKey = mediaKeys[currentIndex];
+      }
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyJ)) {
       _asyncInputDialog(context, appState, annotationState, annotationBarState);
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyR)) {

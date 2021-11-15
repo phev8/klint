@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:klint/api/api.dart';
 import 'package:klint/api/endpoints/projects_api.dart';
 import 'package:klint/api/entities/enums.dart';
-import 'package:klint/state/persistent/app_state.dart';
+import 'package:klint/state/persistent/annotation_screen_state.dart';
 import 'package:klint/ui/theme/klint_theme_data.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class _FrameState extends State<Frame> {
   String? mediaCollectionId;
   String? mediaKey;
 
-  Future<Response?> getMediaResponse(BuildContext context, AppState state) async {
+  Future<Response?> getMediaResponse(BuildContext context, AnnotationScreenState state) async {
     if (mediaResponse != null &&
         projectKey == state.projectKey &&
         mediaCollectionId == state.mediaCollection.id &&
@@ -42,7 +42,7 @@ class _FrameState extends State<Frame> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppState>(
+    return Consumer<AnnotationScreenState>(
       builder: (context, state, _) {
         return FutureBuilder<Response?>(
           future: getMediaResponse(context, state),
