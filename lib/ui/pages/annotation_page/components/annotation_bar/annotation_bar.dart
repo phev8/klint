@@ -21,6 +21,7 @@ class AnnotationBar extends StatelessWidget {
               AnnotationBarItem("(C)lasses", state.classes),
               AnnotationBarItem("(T)ags", state.tags),
               AnnotationBarItem("(S)ave", state.save),
+              AnnotationBarItem("(A)uto Save", state.autoSave),
               AnnotationBarItem("(D)elete", state.delete),
               AnnotationBarItem("(J)ump To", false),
               AnnotationBarItem("(R)eload", false)

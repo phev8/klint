@@ -36,8 +36,8 @@ class AnnotationShortcuts extends ShortcutsDefinition {
     context.read<AnnotationBarState>().setAnnotationMode(newMode);
   }
 
-  Future _asyncInputDialog(
-      BuildContext context, AnnotationScreenState appState, AnnotationState annotationState, AnnotationBarState annotationBarState) async {
+  Future _asyncInputDialog(BuildContext context, AnnotationScreenState appState, AnnotationState annotationState,
+      AnnotationBarState annotationBarState, MarkingDataState markingDataState) async {
     String input = '';
     return showDialog(
       context: context,
@@ -65,9 +65,12 @@ class AnnotationShortcuts extends ShortcutsDefinition {
                 if (input.length > 0) {
                   int currentIndex = mediaKeys.indexOf(input);
                   if (currentIndex >= 0) {
-                    appState.mediaKey = mediaKeys[currentIndex];
-                    //TODO: Fix this workaround.
-                    annotationBarState.setAnnotationMode(annotationState.mode);
+                    maybeAutoSave(annotationBarState, markingDataState, () {
+                      annotationState.emptySelection();
+                      appState.mediaKey = mediaKeys[currentIndex];
+                      //TODO: Fix this workaround.
+                      annotationBarState.setAnnotationMode(annotationState.mode);
+                    });
                   }
                 }
               },
@@ -106,8 +109,11 @@ class AnnotationShortcuts extends ShortcutsDefinition {
 
       //  S
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyS)) {
-      context.read<MarkingDataState>().saveToServer();
-      //  B
+      context.read<MarkingDataState>().saveToServer(() {});
+      //  A
+    } else if (event.isKeyPressed(LogicalKeyboardKey.keyA)) {
+      annotationBarState.autoSave = !annotationBarState.autoSave;
+      // B
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyB)) {
       if (contextMenuState.contextMenus.isNotEmpty) {
         contextMenuState.closeContextMenu();
@@ -140,17 +146,25 @@ class AnnotationShortcuts extends ShortcutsDefinition {
     } else if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
       int currentIndex = mediaKeys.indexOf(appState.mediaKey);
       if (mediaKeys.length - 1 > currentIndex) {
-        currentIndex++;
-        appState.mediaKey = mediaKeys[currentIndex];
+        //maybeAutoSave(context, () {});
+        maybeAutoSave(annotationBarState, markingDataState, () {
+          annotationState.emptySelection();
+          currentIndex++;
+          appState.mediaKey = mediaKeys[currentIndex];
+        });
       }
     } else if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
       int currentIndex = mediaKeys.indexOf(appState.mediaKey);
       if (currentIndex >= 1) {
-        currentIndex--;
-        appState.mediaKey = mediaKeys[currentIndex];
+        //maybeAutoSave(context, () {});
+        maybeAutoSave(annotationBarState, markingDataState, () {
+          annotationState.emptySelection();
+          currentIndex--;
+          appState.mediaKey = mediaKeys[currentIndex];
+        });
       }
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyJ)) {
-      _asyncInputDialog(context, appState, annotationState, annotationBarState);
+      _asyncInputDialog(context, appState, annotationState, annotationBarState, markingDataState);
     } else if (event.isKeyPressed(LogicalKeyboardKey.keyR)) {
       markingDataState.loadFromServer();
     }
@@ -158,5 +172,13 @@ class AnnotationShortcuts extends ShortcutsDefinition {
     annotationState.borderSelection = event.isAltPressed;
     annotationBarState.setAnnotationMode(annotationState.mode);
     return KeyEventResult.ignored;
+  }
+
+  maybeAutoSave(AnnotationBarState abs, MarkingDataState mds, Function then) {
+    if (abs.autoSave) {
+      mds.saveToServer(then);
+    } else {
+      then();
+    }
   }
 }

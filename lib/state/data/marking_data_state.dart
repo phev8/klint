@@ -22,6 +22,8 @@ class MarkingDataState extends ChangeNotifier {
 
   List<String> get mediaKeys => _mediaKeys.cast<String>();
 
+  String lastMarkingDataJSON = "";
+
   MarkingDataState(this.context, this.projectKey, this.collectionKey, this.mediaKey) {
     loadFromServer();
   }
@@ -29,9 +31,11 @@ class MarkingDataState extends ChangeNotifier {
   loadFromServer() {
     Api.call(context, () => MarkingsApi.getMarkingData(projectKey, collectionKey, mediaKey), onSuccess: (response) {
       _markingData = MarkingDataContainer.fromJson(response.data).value;
+      lastMarkingDataJSON = JsonEncoder().convert(_markingData);
       notifyListeners();
     }, onServerError: (_) {
       _markingData = MarkingData(List<String>.empty(), List<BoxMarking>.empty());
+      lastMarkingDataJSON = JsonEncoder().convert(_markingData);
     });
     Api.call(context, () => ProjectsApi.getAllProjectFiles(projectKey, collectionKey), onSuccess: (response) {
       var result = jsonDecode(response.data.toString());
@@ -39,18 +43,35 @@ class MarkingDataState extends ChangeNotifier {
     });
   }
 
-  saveToServer() {
+  saveToServer(Function then) {
     if (_markingData == null) {
       displayErrorSnackbar(context, "No MarkingData");
+      then();
       return;
     }
 
+    if (!hasUpdates()) {
+      //displaySuccessSnackBar(context, "No Changes");
+      then();
+      return;
+    } else {
+      _saveToServerThen(() {
+        then();
+      });
+    }
+  }
+
+  _saveToServerThen(Function then) {
     Api.call(context, () => MarkingsApi.putMarkingData(projectKey, collectionKey, mediaKey, _markingData!), onSuccess: (response) {
-      displaySuccessSnackbar(context, "Saved Successfully");
+      lastMarkingDataJSON = JsonEncoder().convert(_markingData);
+      displaySuccessSnackbar(context, "Saved Successfully", );
+      then();
     }, onException: (e) {
       displayErrorSnackbar(context, "Saving Failed. Exception: ${e.toString()}");
+      then();
     }, onServerError: (e) {
       displayErrorSnackbar(context, "Saving Failed. Server Error: ${e.toString()}");
+      then();
     });
   }
 
@@ -75,5 +96,13 @@ class MarkingDataState extends ChangeNotifier {
   set markingData(MarkingData? data) {
     _markingData = data;
     notifyListeners();
+  }
+
+  bool hasUpdates() {
+    String newMarkingDataJSON = JsonEncoder().convert(markingData);
+    //print("Old: " + lastMarkingDataJSON);
+    //print("New: " + newMarkingDataJSON);
+    //print("Equals: " + lastMarkingDataJSON == newMarkingDataJSON);
+    return !(lastMarkingDataJSON == newMarkingDataJSON);
   }
 }
